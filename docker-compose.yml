@@ -1,0 +1,25 @@
+services:
+  backend:
+    container_name: planit-backend
+    build:
+      context: ./
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/planit
+    depends_on:
+      - db
+    volumes:
+      - ./:/app
+      - /app/node_modules
+  db: 
+    image: postgres:15-alpine
+    container_name: planit-db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: planit
+    ports:
+      - "5432:5432"
