@@ -18,14 +18,14 @@ export const auth = async (
     const token = req.header("x-auth-token");
 
     if (!token) {
-      res.status(401).json({ msg: "No auth token, access denied!" });
+      res.status(401).json({ message: "No auth token, access denied!" });
       return;
     }
 
     const verified = jwt.verify(token, "My1SecretKey@");
 
     if (!verified) {
-      res.status(401).json({ msg: "Token verification failed" });
+      res.status(401).json({ message: "Token verification failed" });
       return;
     }
 
@@ -36,7 +36,7 @@ export const auth = async (
       .from(users)
       .where(eq(users.id, veridiedToken.id));
     if (!user) {
-      res.status(401).json({ msg: "User not found!" });
+      res.status(401).json({ message: "User not found!" });
       return;
     }
 
@@ -45,6 +45,6 @@ export const auth = async (
 
     next();
   } catch (e) {
-    res.status(500).json({ error: e });
+    res.status(500).json({ message: e });
   }
 };

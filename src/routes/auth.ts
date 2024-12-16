@@ -48,7 +48,7 @@ authRouter.post(
       const [user] = await db.insert(users).values(newUser).returning();
       res.status(201).json({ message: "User created successfully", user });
     } catch (e) {
-      res.status(500).json({ error: e });
+      res.status(500).json({ message: e });
     }
   }
 );
@@ -82,7 +82,7 @@ authRouter.post(
 
       res.status(200).json({ ...existingUser, token });
     } catch (e) {
-      res.status(500).json({ error: e });
+      res.status(500).json({ message: e });
     }
   }
 );
@@ -131,7 +131,7 @@ authRouter.get("/", auth, async (req: AuthRequest, res: Response) => {
     const [user] = await db.select().from(users).where(eq(users.id, req.user));
     res.json({ ...user, token: req.token });
   } catch (e) {
-    res.status(500).json({ error: e });
+    res.status(500).json({ message: e });
   }
 });
 
