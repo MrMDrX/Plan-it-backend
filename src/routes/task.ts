@@ -46,4 +46,34 @@ taskRouter.delete("/", auth, async (req: AuthRequest, res) => {
   }
 });
 
+/// Sync tasks
+taskRouter.post("/sync", auth, async (req: AuthRequest, res) => {
+  try {
+    const tasksList = req.body;
+
+    const filteredTasks: NewTask[] = [];
+
+    for (let task of tasksList) {
+      task = {
+        ...task,
+        dueAt: new Date(task.dueAt),
+        createdAt: new Date(task.createdAt),
+        updatedAt: new Date(task.updatedAt),
+        uid: req.user,
+      };
+      filteredTasks.push(task);
+    }
+
+    const pushedTasks = await db
+      .insert(tasks)
+      .values(filteredTasks)
+      .returning();
+
+    res.status(201).json(pushedTasks);
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ message: e });
+  }
+});
+
 export default taskRouter;
